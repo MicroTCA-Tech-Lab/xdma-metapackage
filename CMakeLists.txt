@@ -13,11 +13,10 @@ foreach(VER_CODE DRV_MOD_MAJOR;DRV_MOD_MINOR;DRV_MOD_PATCHLEVEL)
     endif()
 endforeach()
 
-set(XDMA_MAJOR_VERSION ${DRV_MOD_MAJOR})
-set(XDMA_MINOR_VERSION ${DRV_MOD_MINOR})
-set(XDMA_PATCH_VERSION ${DRV_MOD_PATCHLEVEL})
+set(XDMA_VER_STR "${DRV_MOD_MAJOR}.${DRV_MOD_MINOR}.${DRV_MOD_PATCHLEVEL}")
+message("Detected XDMA driver version ${XDMA_VER_STR}")
 
-message("Detected XDMA driver version: ${XDMA_MAJOR_VERSION}.${XDMA_MINOR_VERSION}.${XDMA_PATCH_VERSION}")
+# udev-related stuff
 
 option(INSTALL_UDEV_RULES
     "Install udev rules for xdma driver" ON
@@ -37,3 +36,35 @@ install(FILES
     COMPONENT "udev_rules"
 )
 endif()
+
+# dkms-related stuff
+
+set(DKMS_DEST /usr/src/xdma-${XDMA_VER_STR})
+
+install(DIRECTORY DESTINATION ${DKMS_DEST})
+
+configure_file(dkms.conf.in dkms.conf @ONLY)
+install(FILES
+    "${CMAKE_BINARY_DIR}/dkms.conf"
+    DESTINATION ${DKMS_DEST}
+    COMPONENT "dkms.conf"
+)
+
+install(DIRECTORY
+    "dma_ip_drivers/XDMA/linux-kernel/include"
+    "dma_ip_drivers/XDMA/linux-kernel/xdma"
+    DESTINATION ${DKMS_DEST}
+    COMPONENT "source tree"
+)
+install(FILES
+    "dma_ip_drivers/XDMA/linux-kernel/COPYING"
+    "dma_ip_drivers/XDMA/linux-kernel/LICENSE"
+    "dma_ip_drivers/XDMA/linux-kernel/readme.txt"
+    "dma_ip_drivers/XDMA/linux-kernel/RELEASE"
+    DESTINATION ${DKMS_DEST}
+    COMPONENT "metadata"
+)
+
+install(CODE
+    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} bash ${CMAKE_SOURCE_DIR}/dkms-run.sh)"
+)

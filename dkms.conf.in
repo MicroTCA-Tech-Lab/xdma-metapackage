@@ -1,0 +1,11 @@
+MAKE="cd xdma && make KERNELDIR=${kernel_source_dir}"
+CLEAN="cd xdma && make clean"
+BUILT_MODULE_NAME=xdma
+BUILT_MODULE_LOCATION=xdma
+PACKAGE_NAME=xdma
+DEST_MODULE_LOCATION[0]="/extra"
+
+PACKAGE_VERSION=@XDMA_VER_STR@
+
+REMAKE_INITRD=no
+AUTOINSTALL=yes
