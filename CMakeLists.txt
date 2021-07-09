@@ -68,3 +68,18 @@ install(FILES
 install(CODE
     "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} bash ${CMAKE_SOURCE_DIR}/dkms-run.sh)"
 )
+
+# Create debian package containing dkms module and udev rules
+
+configure_file(postinst.in postinst @ONLY)
+configure_file(prerm.in prerm @ONLY)
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_NAME "xdma-dkms")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "techlab.desy.de")
+set(CPACK_PACKAGE_VERSION_MAJOR ${DRV_MOD_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${DRV_MOD_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${DRV_MOD_PATCHLEVEL})
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
+    "${CMAKE_BINARY_DIR}/postinst;${CMAKE_BINARY_DIR}/prerm")
+include(CPack)

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+dkms remove xdma/@XDMA_VER_STR@ --all || true
