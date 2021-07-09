@@ -75,7 +75,6 @@ configure_file(postinst.in postinst @ONLY)
 configure_file(prerm.in prerm @ONLY)
 
 set(CPACK_GENERATOR "DEB")
-set(CPACK_DEBIAN_PACKAGE_NAME "xdma-dkms")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "techlab.desy.de")
 set(CPACK_PACKAGE_VERSION_MAJOR ${DRV_MOD_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${DRV_MOD_MINOR})
