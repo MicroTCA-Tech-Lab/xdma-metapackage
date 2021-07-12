@@ -2,7 +2,12 @@ cmake_minimum_required (VERSION 3.9)
 Project(xdma-metapackage)
 
 # Retrieve version info from xdma source tree.
-file(READ dma_ip_drivers/XDMA/linux-kernel/xdma/version.h XDMA_VERSION_H)
+set(XDMA_VERSION_FILE "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel/xdma/version.h")
+if(NOT EXISTS ${XDMA_VERSION_FILE})
+    message(FATAL_ERROR "Could not find XDMA source tree. Make sure the submodule is there\n(git submodule init && git submodule update)")
+endif()
+
+file(READ ${XDMA_VERSION_FILE} XDMA_VERSION_H)
 
 foreach(VER_CODE DRV_MOD_MAJOR;DRV_MOD_MINOR;DRV_MOD_PATCHLEVEL)
     # We can't work with ^ and $, as CMake regex works not on lines, but on the whole string
