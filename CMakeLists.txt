@@ -1,8 +1,11 @@
 cmake_minimum_required (VERSION 3.9)
 Project(xdma-metapackage)
 
+include(GNUInstallDirs)
+
 # Retrieve version info from xdma source tree.
-set(XDMA_VERSION_FILE "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel/xdma/version.h")
+set(XDMA_SOURCES "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel")
+set(XDMA_VERSION_FILE "${XDMA_SOURCES}/xdma/version.h")
 if(NOT EXISTS ${XDMA_VERSION_FILE})
     message(FATAL_ERROR "Could not find XDMA source tree. Make sure the submodule is there\n(git submodule init && git submodule update)")
 endif()
@@ -72,6 +75,24 @@ install(FILES
 
 install(CODE
     "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} bash ${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh)"
+)
+
+# xdma tools
+
+set(XDMA_TOOLS "${XDMA_SOURCES}/tools")
+add_executable(xdma-reg-rw "${XDMA_TOOLS}/reg_rw.c")
+
+add_definitions(-D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_LARGE_FILE_SOURCE)
+add_executable(xdma-dma-to-device "${XDMA_TOOLS}/dma_to_device.c")
+add_executable(xdma-dma-from-device "${XDMA_TOOLS}/dma_from_device.c")
+add_executable(xdma-performance "${XDMA_TOOLS}/performance.c")
+
+install(TARGETS
+    xdma-reg-rw
+    xdma-dma-to-device
+    xdma-dma-from-device
+    xdma-performance
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 # Create debian package containing dkms module and udev rules
