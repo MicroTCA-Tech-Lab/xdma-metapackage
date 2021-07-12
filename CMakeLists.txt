@@ -35,8 +35,8 @@ set(UDEV_RULES_PATH
 
 if(INSTALL_UDEV_RULES)
 install(FILES
-    udev_rules/60-xdma.rules
-    udev_rules/xdma-udev-command.sh
+    ${CMAKE_SOURCE_DIR}/udev/60-xdma.rules
+    ${CMAKE_SOURCE_DIR}/udev/xdma-udev-command.sh
     DESTINATION ${UDEV_RULES_PATH}
     COMPONENT "udev_rules"
 )
@@ -48,7 +48,7 @@ set(DKMS_DEST /usr/src/xdma-${XDMA_VER_STR})
 
 install(DIRECTORY DESTINATION ${DKMS_DEST})
 
-configure_file(dkms.conf.in dkms.conf @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/dkms/dkms.conf.in dkms.conf @ONLY)
 install(FILES
     "${CMAKE_BINARY_DIR}/dkms.conf"
     DESTINATION ${DKMS_DEST}
@@ -71,13 +71,13 @@ install(FILES
 )
 
 install(CODE
-    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} bash ${CMAKE_SOURCE_DIR}/dkms-run.sh)"
+    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} bash ${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh)"
 )
 
 # Create debian package containing dkms module and udev rules
 
-configure_file(postinst.in postinst @ONLY)
-configure_file(prerm.in prerm @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/debian/postinst.in postinst @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/debian/prerm.in prerm @ONLY)
 
 set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "techlab.desy.de")
