@@ -4,11 +4,10 @@ This repository adds udev rules and dkms support to the [Xilinx XDMA driver](htt
 
 ## Usage
 
-Make sure to clone with --recurse-submodules.
-
 ### Preparation
 
 ```
+git submodule init && git submodule update
 mkdir build && cd build && cmake ..
 ```
 
