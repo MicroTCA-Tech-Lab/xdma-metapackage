@@ -21,7 +21,7 @@ card_number_fallback() {
 PCIADDR=$(echo $2 | sed -n -E 's#/devices/pci.*([0-9]{4}:[0-9]{2}:[0-9]{2})\.[0-9]/xdma/.*#\1#p')
 if [ -z "${PCIADDR}" ]; then
     # PCI address not found, fall back to card number
-    card_number_fallback
+    card_number_fallback $1
 fi
 
 # Get physical slot for PCI bus address
@@ -34,7 +34,7 @@ for SLOTDIR in ${SLOTPATH}/*; do
 done
 if [ -z "${SLOTNR}" ]; then
     # Slot number not found, fall back to card number
-    card_number_fallback
+    card_number_fallback $1
 fi
 
 echo $1 | \
