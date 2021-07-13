@@ -95,7 +95,7 @@ install(TARGETS
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# Create debian package containing dkms module and udev rules
+# Create debian package containing dkms module, udev rules and xdma tools
 
 configure_file(${CMAKE_SOURCE_DIR}/debian/postinst.in postinst @ONLY)
 configure_file(${CMAKE_SOURCE_DIR}/debian/prerm.in prerm @ONLY)
