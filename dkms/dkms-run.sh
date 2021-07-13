@@ -6,8 +6,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Remove module in case it was installed previously
-dkms remove xdma/${XDMA_VER_STR} --all
+bash ${BINDIR}/prerm
 
-# Build / install module
-dkms build xdma/${XDMA_VER_STR}
-dkms install xdma/${XDMA_VER_STR}
+# Build dkms & update udev
+bash ${BINDIR}/postinst

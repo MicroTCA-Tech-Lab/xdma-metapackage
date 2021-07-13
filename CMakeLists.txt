@@ -74,7 +74,7 @@ install(FILES
 )
 
 install(CODE
-    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} bash ${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh)"
+    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} BINDIR=${CMAKE_BINARY_DIR} bash ${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh)"
 )
 
 # xdma tools
