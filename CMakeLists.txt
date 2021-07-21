@@ -73,8 +73,9 @@ install(FILES
     COMPONENT "metadata"
 )
 
+configure_file(${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh.in dkms-run.sh @ONLY)
 install(CODE
-    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} BINDIR=${CMAKE_BINARY_DIR} bash ${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh)"
+    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} BINDIR=${CMAKE_BINARY_DIR} bash ${CMAKE_BINARY_DIR}/dkms-run.sh)"
 )
 
 # xdma tools
@@ -97,9 +98,6 @@ install(TARGETS
 
 # Create debian package containing dkms module, udev rules and xdma tools
 
-configure_file(${CMAKE_SOURCE_DIR}/debian/postinst.in postinst @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/debian/prerm.in prerm @ONLY)
-
 set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Patrick Huesmann <patrick.huesmann@desy.de>")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/MicroTCA-Tech-Lab/xdma-metapackage")
@@ -111,5 +109,5 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${DRV_MOD_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${DRV_MOD_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${DRV_MOD_PATCHLEVEL})
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
-    "${CMAKE_BINARY_DIR}/postinst;${CMAKE_BINARY_DIR}/prerm")
+    "${CMAKE_SOURCE_DIR}/debian/postinst;${CMAKE_SOURCE_DIR}/debian/prerm")
 include(CPack)

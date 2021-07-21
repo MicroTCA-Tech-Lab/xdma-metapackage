@@ -1,8 +1,0 @@
-#!/bin/bash
-
-dkms add xdma/@XDMA_VER_STR@
-dkms build xdma/@XDMA_VER_STR@ && dkms install xdma/@XDMA_VER_STR@ || true
-
-udevadm trigger
-
-modprobe xdma

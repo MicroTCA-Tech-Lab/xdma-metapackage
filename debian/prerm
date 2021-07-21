@@ -1,0 +1,10 @@
+#!/bin/bash
+
+NAME=xdma
+PACKAGE_NAME=$NAME-dkms
+CVERSION=`dpkg-query -W -f='${Version}' ${PACKAGE_NAME} | awk -F "-" '{print $1}' | cut -d\: -f2`
+ARCH=`dpkg-architecture -qDEB_BUILD_GNU_CPU`
+
+echo "Removing ${NAME} driver (${PACKAGE_NAME} ${CVERSION})"
+
+dkms remove ${NAME}/${CVERSION} --all || true

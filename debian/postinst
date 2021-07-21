@@ -1,0 +1,20 @@
+#!/bin/bash
+
+NAME=xdma
+PACKAGE_NAME=$NAME-dkms
+CVERSION=`dpkg-query -W -f='${Version}' ${PACKAGE_NAME} | awk -F "-" '{print $1}' | cut -d\: -f2`
+ARCH=`dpkg-architecture -qDEB_BUILD_GNU_CPU`
+
+echo "Installing ${NAME} driver (${PACKAGE_NAME} ${CVERSION})"
+
+if ischroot; then
+   echo "Skipping dkms build/install in a chroot."
+   exit 0
+fi
+
+dkms add ${NAME}/${CVERSION}
+dkms build ${NAME}/${CVERSION} && dkms install ${NAME}/${CVERSION} || true
+
+udevadm trigger
+
+modprobe xdma
