@@ -3,8 +3,11 @@
 NAME=xdma
 PACKAGE_NAME=$NAME-dkms
 CVERSION=`dpkg-query -W -f='${Version}' ${PACKAGE_NAME} | awk -F "-" '{print $1}' | cut -d\: -f2`
-ARCH=`dpkg-architecture -qDEB_BUILD_GNU_CPU`
 
-echo "Removing ${NAME} driver (${PACKAGE_NAME} ${CVERSION})"
+# Retrieve driver version from package version:
+# e.g.: "07.06focal2.01" => "07.06.01"
+DVERSION=$(echo ${CVERSION} | sed -E "s/^([[:digit:]]+\.[[:digit:]]+)([[:alpha:]]+[[:digit:]]+)?(\.[[:digit:]]+)$/\1\3/g")
 
-dkms remove ${NAME}/${CVERSION} --all || true
+echo "Removing ${NAME} driver (${PACKAGE_NAME} ${DVERSION})"
+
+dkms remove ${NAME}/${DVERSION} --all || true

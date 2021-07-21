@@ -3,17 +3,20 @@
 NAME=xdma
 PACKAGE_NAME=$NAME-dkms
 CVERSION=`dpkg-query -W -f='${Version}' ${PACKAGE_NAME} | awk -F "-" '{print $1}' | cut -d\: -f2`
-ARCH=`dpkg-architecture -qDEB_BUILD_GNU_CPU`
 
-echo "Installing ${NAME} driver (${PACKAGE_NAME} ${CVERSION})"
+# Retrieve driver version from package version:
+# e.g.: "07.06focal2.01" => "07.06.01"
+DVERSION=$(echo ${CVERSION} | sed -E "s/^([[:digit:]]+\.[[:digit:]]+)([[:alpha:]]+[[:digit:]]+)?(\.[[:digit:]]+)$/\1\3/g")
+
+echo "Installing ${NAME} driver (${PACKAGE_NAME} ${DVERSION})"
 
 if ischroot; then
    echo "Skipping dkms build/install in a chroot."
    exit 0
 fi
 
-dkms add ${NAME}/${CVERSION}
-dkms build ${NAME}/${CVERSION} && dkms install ${NAME}/${CVERSION} || true
+dkms add ${NAME}/${DVERSION}
+dkms build ${NAME}/${DVERSION} && dkms install ${NAME}/${DVERSION} || true
 
 udevadm trigger
 
