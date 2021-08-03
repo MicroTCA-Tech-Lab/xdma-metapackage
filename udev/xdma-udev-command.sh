@@ -18,7 +18,7 @@ card_number_fallback() {
 }
 
 # Get PCI bus address (w/o device function) from device path
-PCIADDR=$(echo $2 | sed -n -E 's#/devices/pci.*([0-9]{4}:[0-9]{2}:[0-9]{2})\.[0-9]/xdma/.*#\1#p')
+PCIADDR=$(echo $2 | sed -n -E 's#/devices/pci.*([0-9a-fA-F]{4}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2})\.[0-7]/xdma/.*#\1#p')
 if [ -z "${PCIADDR}" ]; then
     # PCI address not found, fall back to card number
     card_number_fallback $1
