@@ -3,6 +3,14 @@ Project(xdma-metapackage)
 
 include(GNUInstallDirs)
 
+if("${XDMA_DEBUG}" STREQUAL "1")
+    message("Configuring dkms.conf to build the XDMA module with -DDEBUG")
+    set(XDMA_EXTRA_MAKE_ARGS "DEBUG=1")
+else()
+    message("Use cmake -DXDMA_DEBUG='1' to build the XDMA module with -DDEBUG")
+endif()
+
+
 # Retrieve version info from xdma source tree.
 set(XDMA_SOURCES "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel")
 set(XDMA_VERSION_FILE "${XDMA_SOURCES}/xdma/version.h")
