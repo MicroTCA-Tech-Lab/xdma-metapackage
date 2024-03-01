@@ -28,7 +28,7 @@ fi
 SLOTPATH='/sys/bus/pci/slots'
 for SLOTDIR in ${SLOTPATH}/*; do
     if [ "$(cat $SLOTDIR/address)" = "${PCIADDR}" ]; then
-        SLOTNR=$(echo $SLOTDIR | sed -n -E 's#'${SLOTPATH}'/([0-9]+)#\1#p')
+        SLOTNR=$(echo $SLOTDIR | sed -n -E 's#'${SLOTPATH}'/([0-9]+).*#\1#p')
         break
     fi
 done
