@@ -6,11 +6,11 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Remove module in case it was installed previously
-dkms remove xdma/@XDMA_VER_STR@ --all || true
+dkms remove xdma/@CMAKE_PROJECT_VERSION@ --all || true
 
 # Build dkms & update udev
-dkms add xdma/@XDMA_VER_STR@
-dkms build xdma/@XDMA_VER_STR@ && dkms install xdma/@XDMA_VER_STR@ || true
+dkms add xdma/@CMAKE_PROJECT_VERSION@
+dkms build xdma/@CMAKE_PROJECT_VERSION@ && dkms install xdma/@CMAKE_PROJECT_VERSION@ || true
 
 udevadm trigger
 modprobe xdma

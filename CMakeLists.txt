@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
-Project(xdma-metapackage)
+project(xdma-metapackage VERSION 2020.2.3)
 
 include(GNUInstallDirs)
 
@@ -10,27 +10,10 @@ else()
     message("Use cmake -DXDMA_DEBUG='1' to build the XDMA module with -DDEBUG")
 endif()
 
-
-# Retrieve version info from xdma source tree.
 set(XDMA_SOURCES "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel")
-set(XDMA_VERSION_FILE "${XDMA_SOURCES}/xdma/version.h")
-if(NOT EXISTS ${XDMA_VERSION_FILE})
+if(NOT EXISTS ${XDMA_SOURCES})
     message(FATAL_ERROR "Could not find XDMA source tree. Make sure the submodule is there\n(git submodule init && git submodule update)")
 endif()
-
-file(READ ${XDMA_VERSION_FILE} XDMA_VERSION_H)
-
-foreach(VER_CODE DRV_MOD_MAJOR;DRV_MOD_MINOR;DRV_MOD_PATCHLEVEL)
-    # We can't work with ^ and $, as CMake regex works not on lines, but on the whole string
-    string(REGEX MATCHALL "#define[ \t]+${VER_CODE}[ \t]+([0-9]+)" _ ${XDMA_VERSION_H})
-    set(${VER_CODE} "${CMAKE_MATCH_1}")
-    if(${VER_CODE} STREQUAL "")
-        message(FATAL_ERROR "Unable to parse XDMA driver version ${VER_CODE}")
-    endif()
-endforeach()
-
-set(XDMA_VER_STR "${DRV_MOD_MAJOR}.${DRV_MOD_MINOR}.${DRV_MOD_PATCHLEVEL}")
-message("Detected XDMA driver version ${XDMA_VER_STR}")
 
 # udev-related stuff
 
@@ -45,17 +28,17 @@ set(UDEV_RULES_PATH
 )
 
 if(INSTALL_UDEV_RULES)
-install(FILES
-    ${CMAKE_SOURCE_DIR}/udev/60-xdma.rules
-    ${CMAKE_SOURCE_DIR}/udev/xdma-udev-command.sh
-    DESTINATION ${UDEV_RULES_PATH}
-    COMPONENT "udev_rules"
-)
+    install(FILES
+        ${CMAKE_SOURCE_DIR}/udev/60-xdma.rules
+        ${CMAKE_SOURCE_DIR}/udev/xdma-udev-command.sh
+        DESTINATION ${UDEV_RULES_PATH}
+        COMPONENT "udev_rules"
+    )
 endif()
 
 # dkms-related stuff
 
-set(DKMS_DEST /usr/src/xdma-${XDMA_VER_STR})
+set(DKMS_DEST /usr/src/xdma-${CMAKE_PROJECT_VERSION})
 
 install(DIRECTORY DESTINATION ${DKMS_DEST})
 
@@ -83,7 +66,7 @@ install(FILES
 
 configure_file(${CMAKE_SOURCE_DIR}/dkms/dkms-run.sh.in dkms-run.sh @ONLY)
 install(CODE
-    "execute_process(COMMAND ${CMAKE_COMMAND} -E env XDMA_VER_STR=${XDMA_VER_STR} BINDIR=${CMAKE_BINARY_DIR} bash ${CMAKE_BINARY_DIR}/dkms-run.sh)"
+    "execute_process(COMMAND ${CMAKE_COMMAND} -E env CMAKE_PROJECT_VERSION=${CMAKE_PROJECT_VERSION} BINDIR=${CMAKE_BINARY_DIR} bash ${CMAKE_BINARY_DIR}/dkms-run.sh)"
 )
 
 # xdma tools
@@ -113,9 +96,6 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "dkms,udev")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Xilinx XDMA driver with added DKMS and udev support")
 set(CPACK_DEBIAN_PACKAGE_SECTION "contrib/kernel")
 set(CPACK_PACKAGE_NAME "xdma-dkms")
-set(CPACK_PACKAGE_VERSION_MAJOR ${DRV_MOD_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${DRV_MOD_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${DRV_MOD_PATCHLEVEL})
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
     "${CMAKE_SOURCE_DIR}/debian/postinst;${CMAKE_SOURCE_DIR}/debian/prerm")
 include(CPack)
