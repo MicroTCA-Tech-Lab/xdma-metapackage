@@ -1,6 +1,6 @@
 MAKE="cd xdma && make BUILDSYSTEM_DIR=${kernel_source_dir} @XDMA_EXTRA_MAKE_ARGS@"
 CLEAN="cd xdma && make clean"
-BUILT_MODULE_NAME=xdma
+BUILT_MODULE_NAME=xdma-chr
 BUILT_MODULE_LOCATION=xdma
 PACKAGE_NAME=xdma
 DEST_MODULE_LOCATION[0]="/extra"
