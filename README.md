@@ -23,18 +23,15 @@ sudo make install
 make package
 ```
 
-## Troubleshooting
+## Workarounds for upstream driver
 
-### Can't build on Ubuntu 22.04 / Kernel 5.19
+### Kernel compatibility
 
-There is a [unmerged PR on the Xilinx driver](https://github.com/Xilinx/dma_ip_drivers/pull/179) following a breaking change in the DMA API. Until Xilinx merges this, the fix has to be applied manually.
+Since Xilinx upstream driver is poorly maintained and does not build with a current kernel, this package uses a [community fork](https://github.com/alonbl/dma_ip_drivers/tree/alonbl) ([alonbl's stable patchset](https://github.com/Xilinx/dma_ip_drivers/pull/240)).
 
-```bash
-cd dma_ip_drivers
-git remote add fix git@github.com:vkomenda/dma_ip_drivers.git
-git pull fix
-git checkout fix/dma-compat-fix-linux-5.19
-```
+### Versioning
+
+Since Xilinx does not bump the version of the upstream driver, this package uses a different versioning.
 
 ## Debugging
 
