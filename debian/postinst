@@ -20,4 +20,4 @@ dkms build ${NAME}/${DVERSION} && dkms install ${NAME}/${DVERSION} || true
 
 udevadm trigger
 
-modprobe xdma
+modprobe xdma-chr
