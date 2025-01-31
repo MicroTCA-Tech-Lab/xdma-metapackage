@@ -5,7 +5,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 0
 fi
 
-MOD_NAME="xdma-chr"
+MOD_NAME="xdma"
 
 # Remove module in case it was installed previously
 dkms remove ${MOD_NAME}/@CMAKE_PROJECT_VERSION@ --all || true
@@ -15,4 +15,4 @@ dkms add ${MOD_NAME}/@CMAKE_PROJECT_VERSION@
 dkms build ${MOD_NAME}/@CMAKE_PROJECT_VERSION@ && dkms install ${MOD_NAME}/@CMAKE_PROJECT_VERSION@ || true
 
 udevadm trigger
-modprobe ${MOD_NAME}
+modprobe ${MOD_NAME}-chr
