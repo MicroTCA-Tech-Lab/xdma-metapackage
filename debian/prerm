@@ -12,4 +12,4 @@ echo "Removing ${NAME} driver (${PACKAGE_NAME} ${DVERSION})"
 
 dkms remove ${NAME}/${DVERSION} --all || true
 
-rmmod xdma-chr
+rmmod xdma-chr || true
