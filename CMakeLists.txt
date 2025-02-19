@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
-project(xdma-metapackage VERSION 2020.2.4)
+project(xdma-metapackage VERSION 2020.2.5)
 
 include(GNUInstallDirs)
 
