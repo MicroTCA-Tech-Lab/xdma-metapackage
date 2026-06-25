@@ -49,9 +49,21 @@ install(FILES
     COMPONENT "dkms.conf"
 )
 
+# Copy XDMA kernel sources to build tree and patch deprecated EXTRA_CFLAGS
+# (upstream submodule still uses EXTRA_CFLAGS which is dropped in newer kernels)
+set(PATCHED_SRC "${CMAKE_BINARY_DIR}/xdma_patched")
+file(COPY
+    "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel/include"
+    "${CMAKE_SOURCE_DIR}/dma_ip_drivers/XDMA/linux-kernel/xdma"
+    DESTINATION "${PATCHED_SRC}"
+)
+file(READ "${PATCHED_SRC}/xdma/Makefile" MAKEFILE_CONTENT)
+string(REGEX REPLACE "EXTRA_CFLAGS" "ccflags-y" MAKEFILE_CONTENT "${MAKEFILE_CONTENT}")
+file(WRITE "${PATCHED_SRC}/xdma/Makefile" "${MAKEFILE_CONTENT}")
+
 install(DIRECTORY
-    "dma_ip_drivers/XDMA/linux-kernel/include"
-    "dma_ip_drivers/XDMA/linux-kernel/xdma"
+    "${PATCHED_SRC}/include"
+    "${PATCHED_SRC}/xdma"
     DESTINATION ${DKMS_DEST}
     COMPONENT "source tree"
 )
